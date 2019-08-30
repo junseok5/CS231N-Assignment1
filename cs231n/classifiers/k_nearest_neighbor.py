@@ -2,6 +2,7 @@ from builtins import range
 from builtins import object
 import numpy as np
 from past.builtins import xrange
+from collections import Counter
 
 
 class KNearestNeighbor(object):
@@ -164,9 +165,8 @@ class KNearestNeighbor(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            sorted_i = np.argsort(dists)
-            closest_y.append([self.y_train[sorted_i[i, j]] for j in range(k)])
-            
+            sorted_idx = np.argsort(dists[i, :])
+            closest_y = [self.y_train[sorted_idx[j]] for j in range(k)]
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             #########################################################################
@@ -178,9 +178,9 @@ class KNearestNeighbor(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            y_count = {}
-            for y in closest[i]:
-                y_count[y] = 
+            # closest_y에서 각 숫자들의 빈도수를 구해서 가장 높은 빈도수를 y_pred[i]에 추가
+            y_count = Counter(closest_y).most_common(1)
+            y_pred[i] = y_count[0][0]
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 

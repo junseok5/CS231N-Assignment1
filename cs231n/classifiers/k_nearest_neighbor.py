@@ -132,7 +132,11 @@ class KNearestNeighbor(object):
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        # (500, 3072) - (5000, 3072) = (500, 5000)
+        # (500, ) + (5000, ) - (500, 5000)
+        print(X.shape, self.X_train.shape)
+
+        dists = np.sqrt(np.sum(X**2, axis=1)[:, np.newaxis] + np.sum(self.X_train**2, axis=1) -2 * np.dot(X, self.X_train.T))
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists

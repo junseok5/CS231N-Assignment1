@@ -134,9 +134,13 @@ class KNearestNeighbor(object):
 
         # (500, 3072) - (5000, 3072) = (500, 5000)
         # (500, ) + (5000, ) - (500, 5000)
+        
         print(X.shape, self.X_train.shape)
-
+        #     X: (500, 3072),  X_train: (5000, 3072)     
+        
         dists = np.sqrt(np.sum(X**2, axis=1)[:, np.newaxis] + np.sum(self.X_train**2, axis=1) -2 * np.dot(X, self.X_train.T))
+        #            (500, 1)                                     (5000, )                             (500, 5000)
+        #                  (500, 5000)                           (500, 5000)                           (500, 5000)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists

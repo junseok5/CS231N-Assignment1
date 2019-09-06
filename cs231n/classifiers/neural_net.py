@@ -79,8 +79,15 @@ class TwoLayerNet(object):
         # shape (N, C).                                                             #
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+        
+        # X: (5, 4), W1: (4, 10), W2: (10, 3), b1: (10, ), b2: (3, )
+        
+        relu = lambda x: 1 / (1 + np.exp(-x))
 
-        pass
+        h1 = relu(np.dot(X, W1) + b1)
+        scores = np.dot(h1, W2) + b2
+        
+        print(h1.shape, scores.shape)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -98,7 +105,11 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+        sum_scores = np.sum(np.exp(scores), axis=1)
+        
+        loss = -np.log(np.exp(scores[np.arange(N), y]) / sum_scores)
+        loss = np.sum(loss) / N
+        loss += 0.5 * reg * (np.sum(W1 * W1) + np.sum(W2 * W2))
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -111,8 +122,22 @@ class TwoLayerNet(object):
         #############################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
-
+        pk = np.exp(scores) / sum_scores[:, np.newaxis]
+        p = np.zeros(pk.shape)
+        P = pk
+        P[np.arange(N), y] -= 1
+        
+        dscores = P / N
+        grads['b2'] = np.sum(dscores, axis=0)
+        grads['W2'] = np.dot(h1.T, dscores) + reg * W2
+        
+        # W2: (10, 3), dscores: (5, 3), dh1: (5, 10)
+        dh1 = np.dot(dscores, W2.T)
+        drelu = (1 - dh1) * dh1
+        
+        grads['b1'] = np.sum(drelu, axis=0)
+        grads['W1'] = np.dot(X.T, drelu) + reg * W1
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return loss, grads

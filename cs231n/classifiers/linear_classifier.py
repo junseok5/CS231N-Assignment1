@@ -60,6 +60,7 @@ class LinearClassifier(object):
             random_train_idx = np.random.choice(num_train, batch_size)
             X_batch = X[random_train_idx]
             y_batch = y[random_train_idx]
+            print(X_batch.shape)
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 

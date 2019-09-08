@@ -82,12 +82,11 @@ class TwoLayerNet(object):
         
         # X: (5, 4), W1: (4, 10), W2: (10, 3), b1: (10, ), b2: (3, )
         
-        relu = lambda x: 1 / (1 + np.exp(-x))
+#         relu = lambda x: 1 / (1 + np.exp(-x))
+        relu = lambda x: np.maximum(0, x)
 
         h1 = relu(np.dot(X, W1) + b1)
         scores = np.dot(h1, W2) + b2
-        
-        print(h1.shape, scores.shape)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -133,7 +132,8 @@ class TwoLayerNet(object):
         
         # W2: (10, 3), dscores: (5, 3), dh1: (5, 10)
         dh1 = np.dot(dscores, W2.T)
-        drelu = (1 - dh1) * dh1
+#         drelu = (1 - dh1) * dh1
+        drelu = (h1 > 0) * dh1
         
         grads['b1'] = np.sum(drelu, axis=0)
         grads['W1'] = np.dot(X.T, drelu) + reg * W1
@@ -181,7 +181,9 @@ class TwoLayerNet(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            random_train_idx = np.random.choice(num_train, batch_size)
+            X_batch = X[random_train_idx]
+            y_batch = y[random_train_idx]
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -197,7 +199,10 @@ class TwoLayerNet(object):
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            self.params['W1'] -= learning_rate * grads['W1']
+            self.params['W2'] -= learning_rate * grads['W2']
+            self.params['b1'] -= learning_rate * grads['b1']
+            self.params['b2'] -= learning_rate * grads['b2']
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
@@ -214,7 +219,7 @@ class TwoLayerNet(object):
 
                 # Decay learning rate
                 learning_rate *= learning_rate_decay
-
+        
         return {
           'loss_history': loss_history,
           'train_acc_history': train_acc_history,
@@ -243,7 +248,12 @@ class TwoLayerNet(object):
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
+#         relu = lambda x: 1 / (1 + np.exp(-x))
+        relu = lambda x: np.maximum(0, x)
+        h1 = relu(np.dot(X, self.params['W1']) + self.params['b1'])
+        scores = np.dot(h1, self.params['W2']) + self.params['b2']
+        
+        y_pred = np.argmax(scores, axis=1)
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 

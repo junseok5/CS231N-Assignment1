@@ -82,7 +82,7 @@ class TwoLayerNet(object):
         
         # X: (5, 4), W1: (4, 10), W2: (10, 3), b1: (10, ), b2: (3, )
         
-#         relu = lambda x: 1 / (1 + np.exp(-x))
+#       sigmoid = lambda x: 1 / (1 + np.exp(-x))
         relu = lambda x: np.maximum(0, x)
 
         h1 = relu(np.dot(X, W1) + b1)
@@ -132,7 +132,7 @@ class TwoLayerNet(object):
         
         # W2: (10, 3), dscores: (5, 3), dh1: (5, 10)
         dh1 = np.dot(dscores, W2.T)
-#         drelu = (1 - dh1) * dh1
+#       dsigmoid = (1 - dh1) * dh1
         drelu = (h1 > 0) * dh1
         
         grads['b1'] = np.sum(drelu, axis=0)
@@ -248,7 +248,7 @@ class TwoLayerNet(object):
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-#         relu = lambda x: 1 / (1 + np.exp(-x))
+#       sigmoid = lambda x: 1 / (1 + np.exp(-x))
         relu = lambda x: np.maximum(0, x)
         h1 = relu(np.dot(X, self.params['W1']) + self.params['b1'])
         scores = np.dot(h1, self.params['W2']) + self.params['b2']
